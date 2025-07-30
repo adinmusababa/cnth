@@ -27,3 +27,46 @@ At line:1 char:5
     + FullyQualifiedErrorId : CommandNotFoundException
 
 PS C:\Users\BPS>     qdrant/qdrant
+
+
+
+from pathlib import Path
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.vector_stores.qdrant import QdrantVectorStore
+from llama_index.core import VectorStoreIndex, StorageContext, SimpleDirectoryReader
+from llama_index.core.node_parser import SentenceSplitter
+from qdrant_client import QdrantClient
+
+# --- Qdrant Docker via Ngrok ---
+qdrant_client = QdrantClient(
+    url="http://20e7f39eb39d.ngrok-free.app",  # gunakan http
+    prefer_grpc=False
+)
+
+vector_store = QdrantVectorStore(
+    client=qdrant_client,
+    collection_name="chatbotdata3320"
+)
+
+# --- Load dokumen hasil ekstraksi ---
+DATA_DIR = "/content/drive/MyDrive/extracted"
+documents = SimpleDirectoryReader(DATA_DIR).load_data()
+
+# --- Split dokumen jadi chunk agar embedding lebih optimal ---
+splitter = SentenceSplitter(chunk_size=512, chunk_overlap=50)
+nodes = splitter.get_nodes_from_documents(documents)
+
+# --- Model embedding ---
+embed_model = HuggingFaceEmbedding(model_name="intfloat/multilingual-e5-large")
+
+# --- Simpan embedding ke Qdrant Docker ---
+storage_context = StorageContext.from_defaults(vector_store=vector_store)
+
+index = VectorStoreIndex.from_documents(
+    nodes,
+    storage_context=storage_context,
+    embed_model=embed_model
+)
+
+print("✅ Index berhasil disimpan ke dalam Qdrant Docker via Ngrok")
+
