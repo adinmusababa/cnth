@@ -68,5 +68,9 @@ index = VectorStoreIndex.from_documents(
     embed_model=embed_model
 )
 
-print("✅ Index berhasil disimpan ke dalam Qdrant Docker via Ngrok")
+print("✅ Index berhasil disimpan ke dalam Qdrant Docker via Ngrok
+
+
+
+https://20e7f39eb39d.ngrok-free.app/
 
