@@ -74,3 +74,5 @@ print("✅ Index berhasil disimpan ke dalam Qdrant Docker via Ngrok
 
 https://20e7f39eb39d.ngrok-free.app/
 
+https://bf45a10bf416.ngrok-free.app/
+
